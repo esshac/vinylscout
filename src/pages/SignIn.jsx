@@ -36,7 +36,7 @@ export default function SignInPage({ next }) {
           </li>
         ))}
       </ol>
-      <SleeveFoot>The real build would use proper sign-in (e.g. Replit Auth) — see the README.</SleeveFoot>
+      <SleeveFoot>The real build would use a proper sign-in provider — see the README.</SleeveFoot>
     </section>
   );
 }

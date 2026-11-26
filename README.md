@@ -4,7 +4,7 @@
 
 VinylScout helps vinyl collectors find specific records at participating independent record stores, and gives store staff a quick way to publish and update selected inventory. This repository holds the **test variant**: a working prototype of the MVP described in our PRD (Lab 4), built for prototype testing (PRD §14, Phase 2) and the ENTI 333 Fall 2026 final project.
 
-> **Test-run data.** The 12 stores are real Calgary record shops taken from Google Maps (name, address, phone), collected Nov 25, 2026. For this test run we **assume** they all participate and each carries most of the Discogs vinyl catalogue. Availability, condition, price, copy count and "last confirmed" dates are **simulated** (`src/simulate.js`) and labelled "Simulated" everywhere. None of these stores has joined VinylScout, and this is not their real inventory, so don't present it as real in the presentation, blog or video.
+> **Test-run data.** The 12 stores are real Calgary record shops taken from Google Maps (name, address, phone), collected Nov 25, 2026. For this test run we **assume** they all participate and each carries most of the Discogs vinyl catalogue. Availability, condition, price, copy count and "last confirmed" dates are **simulated** (`src/simulate.js`), and the site footer says so on every page. None of these stores has joined VinylScout, and this is not their real inventory, so don't present it as real in the presentation, blog or video.
 
 ## What's in it
 
@@ -46,7 +46,7 @@ Discogs works with no setup, but without a token search results have **no cover 
 2. Copy `.env.example` to `.env.local` and paste it: `DISCOGS_TOKEN=yourtoken`. On Vercel, add it as an environment variable instead (see below).
 3. Restart `npm run dev`.
 
-The browser never sees the token. It calls `/api/discogs/…` on the dev server (`vite.config.js`), which adds the token and a User-Agent and forwards the request to `api.discogs.com`. Responses are cached in the browser for 7 days, and requests are queued so a burst of searches doesn't hit the rate limit. `.env.local` is git-ignored, so **never commit your token**.
+The browser never sees the token. It calls `/api/discogs/…` on the dev server (`vite.config.js`), which adds the token and a User-Agent and forwards the request to `api.discogs.com`. Responses are cached in the browser for up to 5 hours (Discogs' terms allow at most 6), and requests are queued so a burst of searches doesn't hit the rate limit. `.env.local` is git-ignored, so **never commit your token**.
 
 ### Demo accounts
 Go to **Sign in** and pick an account. The test variant has no passwords.
@@ -76,14 +76,14 @@ Notes:
 
 See **[docs/BUILD_PROCESS.md](docs/BUILD_PROCESS.md)** for every tool we used (Claude Code, Claude in Chrome, Discogs API, Google Maps, React, Vite, three.js, Vercel and more), the build timeline, example prompts, and what the AI did versus what the team decided.
 
-## Featured spot (ad revenue test)
+## Ad spot (revenue test)
 
 One shop at a time can be the **ad** in the Stores tab: its trading card leads the deck, with an "Ad" tag and an animated rainbow border. This tests the "paid features for shops" revenue idea (PRD §11.3).
-- **Admin control:** Admin → *Featured spot* lets you pick the shop and an optional tagline, and shows **ad impressions, clicks and click-through rate**, the numbers you'd use to price and sell the spot.
+- **Admin control:** Admin → *Ad spot* lets you pick the shop and an optional tagline, and shows **ad impressions, clicks and click-through rate**, the numbers you'd use to price and sell the spot.
 - **Clearly labelled:** the ad card always carries an **"Ad"** tag. Its stats are the same simulated stats as every other shop.
 - **Placement, not rankings:** the ad buys *first position in the card deck*. It never changes search results or a shop's stats. The PRD warns that paid placement must not make results misleading.
 - **Example ad:** the project ships with **Sloth Records** as an *example* placement. Its card shows an **Ad** tag; Admin notes it is an example placement, not a paying shop. Sloth Records hasn't bought anything, so say so if you show it. Saving or clearing the spot in Admin replaces it. With no ad set, the deck simply starts at the first shop.
-- **Simulated stats:** shop-level showdown stats (catalogue size, genre depth) are simulated in `src/simulate.js`, like the inventory.
+- **Simulated stats:** shop-card stats (catalogue size, best genre) are simulated in `src/simulate.js`, like the inventory.
 
 ## How the simulated inventory works
 
@@ -97,7 +97,7 @@ One shop at a time can be the **ad** in the Stores tab: its trading card leads t
 
 - React 18 + Vite. Routing is hash-based (`src/App.jsx`). Earlier hero designs (including three.js 3D versions) are in **[`prototypes/`](prototypes/README.md)**, with notes on why each was replaced; they aren't part of the build. The Stores hero is `src/ShopCards.jsx`. The poster map and tracklist are hand-built SVG/CSS in `src/poster/` (`geo.js` holds the projection and quadrant "sides").
 - `src/api.js` is a **mock backend**. Data is stored in the browser's `localStorage`, but every write goes through server-style permission checks (`requireUser`, `requireStoreAccess`, `requireAdmin`) and validation, and throws HTTP-style errors (401/403/400/404). The UI only talks to this module, so it can be swapped for real API calls later.
-- `src/seed.js` holds the fictional demo data.
+- `src/seed.js` holds the 12 real Calgary shops (from Google Maps), the demo accounts and the example ad.
 - `docs/TEST_PLAN.md` maps each PRD acceptance criterion to a test step, plus usability-test scripts for collectors and stores.
 
 ```
@@ -106,11 +106,15 @@ src/
   seed.js           demo data (each record linked to a real Discogs release ID)
   discogs.js        Discogs client: search, release lookup, cache, rate-limit queue
   DiscogsUI.jsx     cover art, release panel, store-side Discogs picker
-  App.jsx           layout, router, tester tools
+  App.jsx           layout, router, header, city picker
   components.jsx    badges, contact links, form fields
-  pages/Collector.jsx   search, listing, stores, store profile
+  pages/Collector.jsx   Vinyls/Stores tabs, results, release + shop pages
+  RecordSunrise.jsx     Vinyls hero (search printed on a spinnable record)
+  ShopCards.jsx         Stores hero (holographic shop cards, ad card, dig list)
+  poster/               gig-poster map, sleeve tracklist, shared sleeve parts
+  simulate.js           simulated stock and shop stats
   pages/StorePortal.jsx listings manager, add/edit form, profile
-  pages/Admin.jsx       reports, accounts, pilot metrics
+  pages/Admin.jsx       pilot metrics, ad spot, reports, accounts, test-run tools
   pages/SignIn.jsx      demo account picker
 ```
 
@@ -125,12 +129,12 @@ src/
   - The terms also limit commercial uses that drive traffic to non-Discogs sites, so check with Discogs before any business launch (PRD §11, §18).
   - Users of the token must be 18+, and the token gives full access to that person's Discogs account, so keep it private.
 - The Discogs proxy runs in the Vite server locally and as Vercel functions (`/api`) in production. Other static hosts would need an equivalent server route.
-- The wantlist (FR-9) is deferred, as the PRD prioritizes.
+- The collector wantlist (FR-9) is deferred, as the PRD prioritizes. The Stores tab has a lighter "dig list" of favourite shops, saved in the browser.
 
 ## From test variant to MVP (next steps)
 
-1. Move `api.js` logic into Express (or Replit server) routes backed by Replit's PostgreSQL. Keep the same function names as endpoints.
-2. Replace demo sign-in with Replit Auth (or another provider) and store `role` + `storeId` on the user.
+1. Move `api.js` logic into server routes (e.g. Vercel functions alongside `/api/discogs`) backed by a hosted database such as Postgres. Keep the same function names as endpoints.
+2. Replace demo sign-in with a real auth provider and store `role` + `storeId` on the user.
 3. Run the permission tests in `docs/TEST_PLAN.md` against the server, not the browser.
 4. Load real listings only from stores that have agreed to the pilot.
 
