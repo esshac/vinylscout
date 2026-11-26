@@ -15,15 +15,17 @@ This file records **what we used to build VinylScout and how**, for the ENTI 333
 | **AI browser agent** | Claude in Chrome | Read the Discogs API Terms of Use and generated our Discogs personal access token in our own signed-in browser, with our explicit approval to accept the terms. |
 | **Requirements** | [Lab 4 PRD: fill in the tools you used, e.g. ChatGPT / Claude] | Product requirements, user stories, acceptance criteria (FR-1 to FR-10), pilot metrics. The app and `docs/TEST_PLAN.md` trace back to these. |
 | **Framework** | React 18 + Vite 5 | UI components and the fast dev server and build. |
-| **Graphics** | Hand-written SVG and CSS animations | The gig-poster map of Calgary, record-sleeve layouts, the Vinyls hero (record + sun-rays + tonearm), the Stores showdown stacks, and the rainbow ad border. |
+| **Graphics** | Hand-written SVG and CSS animations | The gig-poster map of Calgary, record-sleeve layouts, the Vinyls hero (record + sun-rays + tonearm), the holographic shop trading cards (foil shimmer and 3D tilt), and the rainbow ad border. |
 | **3D (prototypes)** | three.js 0.170 | Earlier hero versions: a 3D turntable, a 3D city of shop pins and a 3D record crate. They were replaced by simpler 2D designs; all earlier hero designs are kept in `prototypes/` (with notes on why each was dropped) to show our iterations. |
 | **Record data** | **Discogs API** | Search, release details (tracklists, labels, covers), and popularity (most wanted / most collected). Called through our own proxy so the token stays secret. |
 | **Shop data** | Google Maps | The list of 12 real Calgary record shops (name, address, phone), collected from Maps searches. "Directions" links open Google Maps. |
 | **Fonts** | Google Fonts: Anton, DM Mono, Bricolage Grotesque | The poster and record-sleeve typography. |
 | **Sharing previews** | localhost.run (SSH tunnel) | Temporary public links to show the group work in progress. |
-| **Hosting** | **Vercel** | Production hosting: the static site plus serverless functions in `/api` for the Discogs proxy. |
+| **Hosting** | **Vercel** | Production hosting at [vinylscout-xi.vercel.app](https://vinylscout-xi.vercel.app): the static site plus serverless functions in `/api` for the Discogs proxy, with the Discogs token stored as an environment variable. |
 | **Runtime** | Node.js, npm, macOS | Local development. |
 | **Docs and code hosting** | GitHub | Repository, README, MIT license, test plan, this file. |
+| **Version control** | Git (SSH deploy key) | Commit history of every change, pushed to GitHub. A repo-only deploy key gives push access without sharing an account password. |
+| **Continuous deployment** | Vercel for GitHub | Connects the repo to Vercel so every push to `main` redeploys the live site automatically. |
 
 ---
 
