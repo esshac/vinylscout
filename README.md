@@ -58,7 +58,7 @@ Go to **Sign in** and pick an account. The test variant has no passwords.
 ## Deploy to Vercel
 
 The app is a static Vite build plus two small **serverless functions** in `/api`:
-- `api/discogs/[...path].js` is the Discogs proxy. It adds the secret token and only allows search and release lookups.
+- `api/discogs-proxy.js` is the Discogs proxy (`vercel.json` routes `/api/discogs/*` to it). It adds the secret token and only allows search and release lookups.
 - `api/discogs-status.js` tells the UI whether a token is set.
 
 Locally, `vite.config.js` does the same job, so `npm run dev` needs no Vercel.

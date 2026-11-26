@@ -1,5 +1,6 @@
 // Vercel serverless function: the production version of the Discogs proxy in vite.config.js.
-// The browser calls /api/discogs/<path>; this forwards it to https://api.discogs.com/<path> with the
+// The browser calls /api/discogs/<path>; vercel.json rewrites that to /api/discogs-proxy?__path=<path>
+// (plain Vercel functions have no catch-all routes). This forwards it to https://api.discogs.com/<path> with the
 // DISCOGS_TOKEN (a Vercel environment variable) so the token never reaches the browser.
 // Same safety rule as local dev: only the two read-only calls the app needs are allowed through.
 
@@ -8,7 +9,9 @@ const UA = 'VinylScout/0.1 (ENTI 333 student prototype)';
 
 export default async function handler(req, res) {
   const url = new URL(req.url, 'http://localhost');
-  const path = url.pathname.replace(/^\/api\/discogs/, '') || '/';
+  const raw = url.searchParams.get('__path') || '';
+  url.searchParams.delete('__path');
+  const path = '/' + raw.replace(/^\/+/, '');
 
   if (!['GET', 'HEAD'].includes(req.method) || !ALLOWED.some((re) => re.test(path))) {
     res.status(403).json({ message: 'VinylScout proxy only allows Discogs searches and release lookups.' });

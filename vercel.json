@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/api/discogs/:path*", "destination": "/api/discogs-proxy?__path=:path*" }
+  ]
+}
