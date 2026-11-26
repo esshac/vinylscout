@@ -22,9 +22,9 @@ VinylScout helps vinyl collectors find specific records at participating indepen
 - *No local results:* the page shows matching Discogs releases so collectors can confirm what they're after and quote the catalogue # when they call a shop.
 - VinylScout's own listings (store, price, condition, availability, freshness) stay separate from Discogs data. Discogs describes the release in general; the store describes its own copy.
 
-**Vinyls tab:** a big record rising out of its sleeve like a sunrise. Whatever you type is printed live around its label, typing makes it spin faster, you can grab and spin (or flick) the record with your mouse or finger, and pressing Search drops the tonearm before the results load (`src/RecordSunrise.jsx`; the earlier three.js turntable is kept, unused, in `src/three/VinylScene.jsx`). Below it is a "Popular vinyls near you" grid ranked by Discogs want/have counts, showing how many Calgary stores carry each record and the lowest price.
+**Vinyls tab:** a big record rising out of its sleeve like a sunrise. Whatever you type is printed live around its label, typing makes it spin faster, you can grab and spin (or flick) the record with your mouse or finger, and pressing Search drops the tonearm before the results load (`src/RecordSunrise.jsx`). Below it is a "Popular vinyls near you" grid ranked by Discogs want/have counts, showing how many Calgary stores carry each record and the lowest price.
 
-**Stores tab:** a **shop showdown**: the 12 shops stand as stacks of riso-printed sleeves, and a lens decides what height means (**Nearest** to you or downtown, **Biggest catalogue**, or **Best for** Jazz / Hip-hop / Rock / Soul / Electronic, each genre with its own sleeve print), crowning a winner. Typing filters by shop name or neighbourhood, and clicking a stack opens the shop. On top is an **Ad** spot with an animated rainbow border (see below) (`src/ShopShowdown.jsx`; earlier versions of this hero are kept, unused, in `src/RecordStacks.jsx`, `src/ShopMarquee.jsx`, `src/LetterBoard.jsx`, `src/LabelMaker.jsx` and `src/three/CrateScene.jsx`). Below it is a screen-printed **gig-poster map**: a fisheye projection that enlarges downtown, riso-style inks with paper grain, and a spinning record for each shop. Next to it is a **record-sleeve tracklist** of the shops grouped by quadrant (Northwest · Southwest & Beltline · Southeast & Inglewood · Northeast), with distance from downtown as the "track time". Hovering a shop in either one highlights it in the other, and record searches light up the shops that carry it. Google Maps is used only for each shop's Directions link.
+**Stores tab:** **holographic shop trading cards**: one collectible card per shop (cover art in its quadrant ink, catalogue size, distance, best genre), with a rainbow foil shimmer and 3D tilt that follow the pointer. Swipe, drag, use ‹ › or the arrow keys to flip through the deck, save favourites to a **dig list** (stored in this browser), and type to filter by shop name or neighbourhood. The advertised shop's card leads the deck, with an **Ad** tag and an animated rainbow border (`src/ShopCards.jsx`). Below it is a screen-printed **gig-poster map**: a fisheye projection that enlarges downtown, riso-style inks with paper grain, and a spinning record for each shop. Next to it is a **record-sleeve tracklist** of the shops grouped by quadrant (Northwest · Southwest & Beltline · Southeast & Inglewood · Northeast), with distance from downtown as the "track time". Hovering a shop in either one highlights it in the other, and record searches light up the shops that carry it. Google Maps is used only for each shop's Directions link.
 
 Pages, cards and covers animate on hover (records slide out of their sleeves). Animations turn off when the OS "reduce motion" setting is on.
 
@@ -78,11 +78,11 @@ See **[docs/BUILD_PROCESS.md](docs/BUILD_PROCESS.md)** for every tool we used (C
 
 ## Featured spot (ad revenue test)
 
-One shop at a time can be featured in a banner at the top of the Stores tab. This tests the "paid features for shops" revenue idea (PRD §11.3).
+One shop at a time can be the **ad** in the Stores tab: its trading card leads the deck, with an "Ad" tag and an animated rainbow border. This tests the "paid features for shops" revenue idea (PRD §11.3).
 - **Admin control:** Admin → *Featured spot* lets you pick the shop and an optional tagline, and shows **ad impressions, clicks and click-through rate**, the numbers you'd use to price and sell the spot.
-- **Clearly labelled:** the banner always carries an **"Ad"** tag, inside an animated rainbow border.
-- **Rankings untouched:** it never changes the showdown rankings or search results. The PRD warns that paid placement must not make results misleading.
-- **Example ad:** the project ships with **Sloth Records** as an *example* placement. The banner shows it as an **Ad**; Admin notes it is an example placement, not a paying shop. Sloth Records hasn't bought anything, so say so if you show it. Saving or clearing the spot in Admin replaces it, and "Your shop here" appears when nothing is featured.
+- **Clearly labelled:** the ad card always carries an **"Ad"** tag. Its stats are the same simulated stats as every other shop.
+- **Placement, not rankings:** the ad buys *first position in the card deck*. It never changes search results or a shop's stats. The PRD warns that paid placement must not make results misleading.
+- **Example ad:** the project ships with **Sloth Records** as an *example* placement. Its card shows an **Ad** tag; Admin notes it is an example placement, not a paying shop. Sloth Records hasn't bought anything, so say so if you show it. Saving or clearing the spot in Admin replaces it. With no ad set, the deck simply starts at the first shop.
 - **Simulated stats:** shop-level showdown stats (catalogue size, genre depth) are simulated in `src/simulate.js`, like the inventory.
 
 ## How the simulated inventory works
@@ -95,7 +95,7 @@ One shop at a time can be featured in a banner at the top of the Stores tab. Thi
 
 ## How it's built
 
-- React 18 + Vite, plus three.js for the 3D turntable (`src/three/VinylScene.jsx`). Routing is hash-based (`src/App.jsx`). The Stores hero is `src/ShopShowdown.jsx`. The poster map and tracklist are hand-built SVG/CSS in `src/poster/` (`geo.js` holds the projection and quadrant "sides").
+- React 18 + Vite. Routing is hash-based (`src/App.jsx`). Earlier hero designs (including three.js 3D versions) are in **[`prototypes/`](prototypes/README.md)**, with notes on why each was replaced; they aren't part of the build. The Stores hero is `src/ShopCards.jsx`. The poster map and tracklist are hand-built SVG/CSS in `src/poster/` (`geo.js` holds the projection and quadrant "sides").
 - `src/api.js` is a **mock backend**. Data is stored in the browser's `localStorage`, but every write goes through server-style permission checks (`requireUser`, `requireStoreAccess`, `requireAdmin`) and validation, and throws HTTP-style errors (401/403/400/404). The UI only talks to this module, so it can be swapped for real API calls later.
 - `src/seed.js` holds the fictional demo data.
 - `docs/TEST_PLAN.md` maps each PRD acceptance criterion to a test step, plus usability-test scripts for collectors and stores.

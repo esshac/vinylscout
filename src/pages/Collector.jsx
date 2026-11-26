@@ -10,7 +10,7 @@ import { storeCoverage, GENRES } from '../simulate.js';
 // brighter riso inks for type/art on dark backgrounds, by quadrant
 const SHOP_INK = { NW: '#7d97ff', SW: '#ff5fa6', SE: '#ff7a3d', NE: '#ffd34d' };
 import RecordSunrise from '../RecordSunrise.jsx';
-import ShopShowdown from '../ShopShowdown.jsx';
+import ShopCards from '../ShopCards.jsx';
 import PosterMap from '../poster/PosterMap.jsx';
 import SleeveTracklist from '../poster/SleeveTracklist.jsx';
 import { trackify, INK } from '../poster/geo.js';
@@ -55,7 +55,7 @@ function SearchTabs({ mode, onChange }) {
 
 const HEADLINES = {
   vinyls: { eyebrow: 'Calgary pilot · local record stores', words: ['Find', 'the', 'record.'], sub: 'Know which Calgary stores to check before you leave home.' },
-  stores: { eyebrow: 'Every crate in the city', words: ['Dig', 'every', 'crate.'], sub: 'Twelve Calgary record shops, stacked up against each other. Pick what matters — nearest to you, biggest catalogue, or the best shop for your genre.' },
+  stores: { eyebrow: 'Every crate in the city', words: ['Dig', 'every', 'crate.'], sub: 'Twelve Calgary record shops, one card each. Flip through the deck, compare their stats, and save your favourites to a dig list.' },
 };
 
 function Headline({ mode }) {
@@ -115,8 +115,8 @@ export function SearchPage({ q, tab }) {
         </div>
         {landing && (
           <div className={`hero-art hero-sleeve sleeve-back rise ${mode}`} key={mode} style={{ '--i': 2 }}>
-            <SleeveHead cat={mode === 'vinyls' ? 'Now pressing · your search · 33⅓' : `Shop showdown · ${crateTracks.length} shops`} />
-            {mode === 'vinyls' ? <RecordSunrise text={text} dropping={dropping} /> : <ShopShowdown tracks={crateTracks} text={text} going={dropping} onOpen={(id) => go(`/store/${id}`)} />}
+            <SleeveHead cat={mode === 'vinyls' ? 'Now pressing · your search · 33⅓' : `Shop cards · ${crateTracks.length} to collect`} />
+            {mode === 'vinyls' ? <RecordSunrise text={text} dropping={dropping} /> : <ShopCards tracks={crateTracks} text={text} going={dropping} onOpen={(id) => go(`/store/${id}`)} />}
           </div>
         )}
       </section>

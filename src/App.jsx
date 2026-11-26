@@ -68,7 +68,7 @@ export default function App() {
           </a>
           <CityPicker />
           {/* What to search (Vinyls / Stores) lives only in the toggle beside the search box. */}
-          <nav className="nav" aria-label="Account">
+          <nav className="nav" aria-label="Account" data-role={user?.role || "guest"}>
             <a href="#/portal" className={active('portal')}>For stores</a>
             {user?.role === 'admin' && <a href="#/admin" className={active('admin')}>Admin</a>}
             {user ? (

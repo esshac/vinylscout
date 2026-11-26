@@ -14,7 +14,7 @@ This file records **what we used to build VinylScout and how**, for the ENTI 333
 | **Requirements** | [Lab 4 PRD: fill in the tools you used, e.g. ChatGPT / Claude] | Product requirements, user stories, acceptance criteria (FR-1 to FR-10), pilot metrics. The app and `docs/TEST_PLAN.md` trace back to these. |
 | **Framework** | React 18 + Vite 5 | UI components and the fast dev server and build. |
 | **Graphics** | Hand-written SVG and CSS animations | The gig-poster map of Calgary, record-sleeve layouts, the Vinyls hero (record + sun-rays + tonearm), the Stores showdown stacks, and the rainbow ad border. |
-| **3D (prototypes)** | three.js 0.170 | Earlier hero versions: a 3D turntable, a 3D city of shop pins and a 3D record crate. They were replaced by simpler 2D designs but kept in `src/three/` to show our iterations. |
+| **3D (prototypes)** | three.js 0.170 | Earlier hero versions: a 3D turntable, a 3D city of shop pins and a 3D record crate. They were replaced by simpler 2D designs; all earlier hero designs are kept in `prototypes/` (with notes on why each was dropped) to show our iterations. |
 | **Record data** | **Discogs API** | Search, release details (tracklists, labels, covers), and popularity (most wanted / most collected). Called through our own proxy so the token stays secret. |
 | **Shop data** | Google Maps | The list of 12 real Calgary record shops (name, address, phone), collected from Maps searches. "Directions" links open Google Maps. |
 | **Fonts** | Google Fonts: Anton, DM Mono, Bricolage Grotesque | The poster and record-sleeve typography. |
@@ -50,7 +50,7 @@ Browser (React app, hash routes)
 5. **A design language.** A screen-printed gig-poster map and record-sleeve tracklist, then the same style applied site-wide: headers, heroes, results, release pages, shop pages, the store portal and admin.
 6. **Hero iterations** (the biggest learning loop):
    - *Vinyls:* 3D turntable → **record "sunrise" that prints your search on its label**, with drag-to-spin.
-   - *Stores:* 3D city → 3D crate → label maker → letterboard → name marquee → live record stacks → **shop showdown** (Nearest / Biggest catalogue / Best for a genre).
+   - *Stores:* 3D city → 3D crate → label maker → letterboard → name marquee → live record stacks → shop showdown → **holographic shop trading cards** with a dig list.
    - Each was built, tried, and kept or rejected on whether it was useful as well as fun.
 7. **Business model.** A labelled **Ad** slot (rainbow border) in the Stores hero, controlled from Admin, with impressions and clicks to price it. Sloth Records is the example placement.
 8. **Polish and bugs.** Phone overflow, a blocked confirmation popup, title overlaps, a city picker (Calgary pilot), and a cleaner header.

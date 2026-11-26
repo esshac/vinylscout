@@ -24,7 +24,7 @@ export function storeCoverage(storeId) { return 0.6 + rand(`cov|${storeId}`) * 0
 
 /**
  * Simulated offer for one store + release, or null when the store doesn't have it.
- * `anchor` = when the test data was seeded (so the Tester tools clock can age it).
+ * `anchor` = when the test data was seeded (so the Admin → Test-run tools clock can age it).
  * `storeConfirmedAt` = last time the store pressed "confirm all".
  */
 export function simulateOffer(store, release, { anchor, storeConfirmedAt } = {}) {

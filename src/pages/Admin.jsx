@@ -115,10 +115,10 @@ function FeaturedSpot({ stores, m, act }) {
   const ctr = m.adImpressions ? Math.round((m.adClicks / m.adImpressions) * 1000) / 10 : 0;
   return (
     <div className="card featured-admin">
-      <h3>Featured spot (ad) — Stores tab</h3>
+      <h3>Ad spot — Stores tab card deck</h3>
       <p className="muted small">
-        One shop can buy the "Featured · Ad" banner at the top of the Stores tab. It is always labelled as an ad and never changes
-        the rankings. With nobody featured, the banner invites shops to advertise.
+        One shop can buy the ad spot: its trading card leads the Stores deck with an "Ad" tag and a rainbow border.
+        It never changes search results or a shop's stats. With no ad set, the deck starts at the first shop.
       </p>
       <div className="stats metrics">
         <div className="stat"><b>{current ? current.store.name : '—'}</b><span>currently featured{current?.example ? ' (example placement — not a paying shop)' : ''}</span>{current && <small>since {new Date(current.since).toLocaleDateString()}</small>}</div>
