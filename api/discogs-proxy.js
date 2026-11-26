@@ -11,6 +11,7 @@ export default async function handler(req, res) {
   const url = new URL(req.url, 'http://localhost');
   const raw = url.searchParams.get('__path') || '';
   url.searchParams.delete('__path');
+  url.searchParams.delete('path'); // Vercel also passes the :path* route param as a query param
   const path = '/' + raw.replace(/^\/+/, '');
 
   if (!['GET', 'HEAD'].includes(req.method) || !ALLOWED.some((re) => re.test(path))) {
