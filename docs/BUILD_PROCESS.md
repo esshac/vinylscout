@@ -56,7 +56,7 @@ Browser (React app, hash routes)
    - Each was built, tried, and kept or rejected on whether it was useful as well as fun.
 7. **Business model.** A labelled **Ad** slot (rainbow border) in the Stores hero, controlled from Admin, with impressions and clicks to price it. Sloth Records is the example placement.
 8. **Polish and bugs.** Phone overflow, a blocked confirmation popup, title overlaps, a city picker (Calgary pilot), and a cleaner header.
-9. **Deployment.** Vercel serverless functions replace the dev-only proxy.
+9. **Deployment.** Code pushed to GitHub (`esshac/vinylscout`) and imported into Vercel, with the Discogs token as an environment variable. Vercel serverless functions replace the dev-only proxy. The first deploy's proxy returned 404 because plain Vercel functions don't support `[...path]` catch-all routes; a `vercel.json` rewrite to a single function fixed it. Live at [vinylscout-xi.vercel.app](https://vinylscout-xi.vercel.app), and every push to `main` redeploys automatically.
 
 ---
 

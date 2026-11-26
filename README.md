@@ -2,6 +2,8 @@
 
 **Find the record you want. Know which local stores to check before you leave home.**
 
+**▶ Live demo: [vinylscout-xi.vercel.app](https://vinylscout-xi.vercel.app)**: no install or account needed. Sign in with a demo account to try the store and admin sides.
+
 VinylScout helps vinyl collectors find specific records at participating independent record stores, and gives store staff a quick way to publish and update selected inventory. This repository holds the **test variant**: a working prototype of the MVP described in our PRD (Lab 4), built for prototype testing (PRD §14, Phase 2) and the ENTI 333 Fall 2026 final project.
 
 > **Test-run data.** The 12 stores are real Calgary record shops taken from Google Maps (name, address, phone), collected Nov 25, 2026. For this test run we **assume** they all participate and each carries most of the Discogs vinyl catalogue. Availability, condition, price, copy count and "last confirmed" dates are **simulated** (`src/simulate.js`), and the site footer says so on every page. None of these stores has joined VinylScout, and this is not their real inventory, so don't present it as real in the presentation, blog or video.
@@ -37,7 +39,7 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:5173. To put it online, see **Deploy to Vercel** below.
+Open http://localhost:5173. You don't need to run it locally to try it: the [live demo](https://vinylscout-xi.vercel.app) is the same app.
 
 ### Discogs token (optional, recommended)
 Discogs works with no setup, but without a token search results have **no cover images** and you're limited to 25 requests a minute. With a token, results show covers and the limit is 60 a minute.
@@ -46,7 +48,7 @@ Discogs works with no setup, but without a token search results have **no cover 
 2. Copy `.env.example` to `.env.local` and paste it: `DISCOGS_TOKEN=yourtoken`. On Vercel, add it as an environment variable instead (see below).
 3. Restart `npm run dev`.
 
-The browser never sees the token. It calls `/api/discogs/…` on the dev server (`vite.config.js`), which adds the token and a User-Agent and forwards the request to `api.discogs.com`. Responses are cached in the browser for up to 5 hours (Discogs' terms allow at most 6), and requests are queued so a burst of searches doesn't hit the rate limit. `.env.local` is git-ignored, so **never commit your token**.
+The browser never sees the token. It calls `/api/discogs/…`: locally the dev server (`vite.config.js`) answers, and on the live site a Vercel function does. Either one adds the token and a User-Agent and forwards the request to `api.discogs.com`. Responses are cached in the browser for up to 5 hours (Discogs' terms allow at most 6), and requests are queued so a burst of searches doesn't hit the rate limit. `.env.local` is git-ignored, so **never commit your token**.
 
 ### Demo accounts
 Go to **Sign in** and pick an account. The test variant has no passwords.
@@ -55,7 +57,15 @@ Go to **Sign in** and pick an account. The test variant has no passwords.
 - **Demo staff accounts** for Hot Wax Records, Recordland and Sloth Records: each manages only that store. These are test accounts, not real store staff.
 - **Casey (Collector):** signed-in collector with no store access
 
-## Deploy to Vercel
+## Hosting (Vercel)
+
+The live demo runs on **Vercel** (team *ENTI 333*, project `vinylscout`), connected to this GitHub repo:
+- **Auto-deploy:** every push to `main` builds and goes live at [vinylscout-xi.vercel.app](https://vinylscout-xi.vercel.app) in about 15 seconds. Pushes to other branches get their own preview URLs.
+- **Secret token:** the Discogs token is stored as the Vercel environment variable `DISCOGS_TOKEN` (Production and Preview). It isn't in this repo.
+- **Checks after a deploy:** `/api/discogs-status` returns `{"token":true}`, and anything other than a search or release lookup (e.g. `/api/discogs/oauth/identity`) returns **403**.
+- **Note:** `vinylscout.vercel.app` (without `-xi`) belongs to someone else, so always share the `-xi` link.
+
+### Deploying your own copy
 
 The app is a static Vite build plus two small **serverless functions** in `/api`:
 - `api/discogs-proxy.js` is the Discogs proxy (`vercel.json` routes `/api/discogs/*` to it). It adds the secret token and only allows search and release lookups.
@@ -63,7 +73,7 @@ The app is a static Vite build plus two small **serverless functions** in `/api`
 
 Locally, `vite.config.js` does the same job, so `npm run dev` needs no Vercel.
 
-1. Push the repo to GitHub.
+1. Fork or push the repo to GitHub.
 2. In Vercel, choose **Add New → Project** and import the repo. Vercel detects **Vite** (build `npm run build`, output `dist`).
 3. Under **Settings → Environment Variables**, add `DISCOGS_TOKEN` = your Discogs personal token (Production and Preview).
 4. Deploy, then open the URL. Searches should show cover art; `/api/discogs-status` should return `{"token":true}`.
@@ -71,6 +81,7 @@ Locally, `vite.config.js` does the same job, so `npm run dev` needs no Vercel.
 Notes:
 - **Shared data:** data such as listings and reports still lives in each visitor's browser (`localStorage`), so visitors don't see each other's changes. See "From test variant to MVP".
 - **Simulated stock:** the live site shows real shop names with simulated stock (disclosed in the footer). Share the link with your class and team rather than publicly.
+- **Why `vercel.json`:** plain Vercel functions don't support catch-all routes like `[...path].js`, so `vercel.json` rewrites `/api/discogs/<path>` to the single `api/discogs-proxy.js` function.
 
 ## How we built it
 
@@ -128,7 +139,7 @@ src/
   - Cover images are "Restricted Data": allowed for this non-commercial prototype, but **not** for commercial use. A paid version of VinylScout would need written permission from Discogs or store-supplied photos.
   - The terms also limit commercial uses that drive traffic to non-Discogs sites, so check with Discogs before any business launch (PRD §11, §18).
   - Users of the token must be 18+, and the token gives full access to that person's Discogs account, so keep it private.
-- The Discogs proxy runs in the Vite server locally and as Vercel functions (`/api`) in production. Other static hosts would need an equivalent server route.
+- The Discogs proxy runs in the Vite server locally and as Vercel functions (`/api`) on the live site. Other static hosts would need an equivalent server route.
 - The collector wantlist (FR-9) is deferred, as the PRD prioritizes. The Stores tab has a lighter "dig list" of favourite shops, saved in the browser.
 
 ## From test variant to MVP (next steps)
