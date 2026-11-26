@@ -1,6 +1,8 @@
 # How VinylScout was built: tools and process
 
-This file records **what we used to build VinylScout and how**, for the ENTI 333 (Fall 2026) final project: GitHub documentation, presentation and blog post. Fill in the bracketed parts for your team.
+This file records **what we used to build VinylScout and how**, for the ENTI 333 (Fall 2026) final project: GitHub documentation, presentation and blog post.
+
+**Team:** Declan McGowan · Esshac Limson · Keenan McGowan · Priyana Moses
 
 ---
 

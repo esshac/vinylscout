@@ -141,6 +141,6 @@ src/
 ## Team & course
 
 Built for **ENTI 333: Generative AI and Prompting** (Haskayne School of Business, University of Calgary, Fall 2026) using AI-assisted development tools.
-Team: _add names here_.
+**Team:** Declan McGowan · Esshac Limson · Keenan McGowan · Priyana Moses
 
 License: [MIT](LICENSE)
